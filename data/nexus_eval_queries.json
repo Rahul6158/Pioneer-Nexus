@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "question": "Show total sales revenue for all regions",
+    "expected_sql": "SELECT SUM(revenue_iqd) as overall_revenue FROM liveapp.pharmasales",
+    "category": "aggregation",
+    "description": "Total revenue summation over all transactions"
+  },
+  {
+    "id": 2,
+    "question": "Show revenue by region",
+    "expected_sql": "SELECT region, SUM(revenue_iqd) as total_revenue FROM liveapp.pharmasales GROUP BY region ORDER BY total_revenue DESC",
+    "category": "grouping",
+    "description": "Grouped revenue sum sorted descending"
+  },
+  {
+    "id": 3,
+    "question": "Show top 5 products by quantity sold",
+    "expected_sql": "SELECT product_name, SUM(quantity) as total_quantity FROM liveapp.pharmasales GROUP BY product_name ORDER BY total_quantity DESC LIMIT 5",
+    "category": "ranking",
+    "description": "Ranked products by units sold with limit"
+  },
+  {
+    "id": 4,
+    "question": "List transactions in Baghdad",
+    "expected_sql": "SELECT * FROM liveapp.pharmasales WHERE region = 'Baghdad' LIMIT 20",
+    "category": "filtering",
+    "description": "Filtering transactions by specific region"
+  },
+  {
+    "id": 5,
+    "question": "Find all product returns",
+    "expected_sql": "SELECT * FROM liveapp.pharmasales WHERE transaction_type = 'Return' LIMIT 20",
+    "category": "filtering",
+    "description": "Filtering transactions by type"
+  },
+  {
+    "id": 6,
+    "question": "Show top warehouse performance by sales",
+    "expected_sql": "SELECT warehouse, SUM(revenue_iqd) as sales FROM liveapp.pharmasales GROUP BY warehouse ORDER BY sales DESC",
+    "category": "grouping",
+    "description": "Warehouse sales breakdown"
+  },
+  {
+    "id": 7,
+    "question": "Show total quantity sold for Clafoneer 500mg Vial",
+    "expected_sql": "SELECT SUM(quantity) as total_qty FROM liveapp.pharmasales WHERE product_name = 'Clafoneer 500mg Vial'",
+    "category": "filtering_aggregation",
+    "description": "Aggregated sum with exact product match"
+  },
+  {
+    "id": 8,
+    "question": "Show average selling price",
+    "expected_sql": "SELECT SUM(revenue_iqd) / SUM(quantity) as avg_price FROM liveapp.pharmasales",
+    "category": "aggregation",
+    "description": "Calculated field division"
+  },
+  {
+    "id": 9,
+    "question": "Show all sales transactions exceeding 100 units",
+    "expected_sql": "SELECT * FROM liveapp.pharmasales WHERE transaction_type = 'Sale' AND quantity > 100 LIMIT 20",
+    "category": "filtering",
+    "description": "Multi-conditional transaction filtering"
+  },
+  {
+    "id": 10,
+    "question": "Total transactions in Mosul warehouse North",
+    "expected_sql": "SELECT COUNT(*) as txn_count FROM liveapp.pharmasales WHERE region = 'Mosul' AND warehouse = 'North'",
+    "category": "filtering_aggregation",
+    "description": "Multi-conditional count grouping"
+  }
+]

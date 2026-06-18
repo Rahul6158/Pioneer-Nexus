@@ -1,0 +1,68 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint-and-format:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install Linting Tools
+      run: |
+        pip install ruff black
+
+    - name: Verify Code Formatting (Black)
+      run: |
+        black --check backend/
+
+    - name: Lint Codebase (Ruff)
+      run: |
+        ruff check backend/
+
+  unit-tests:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-format
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential python3-dev
+
+    - name: Install Python Dependencies
+      run: |
+        pip install --upgrade pip
+        # Install prophet pre-requisites
+        pip install numpy pandas workalendar holidays
+        # Install rest of requirements
+        if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
+        pip install pytest pytest-cov
+
+    - name: Run Pytest Suite
+      run: |
+        cd backend
+        python -m pytest --tb=short

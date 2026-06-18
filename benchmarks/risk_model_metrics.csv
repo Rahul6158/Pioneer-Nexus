@@ -1,0 +1,2 @@
+model_name,precision,recall,f1_score,samples_evaluated,status
+Return Probability Classifier,0.0,0.0,0.0,156,PASSED

@@ -1,0 +1,11 @@
+query_id,question,syntax_valid,execution_success,semantic_match,latency_ms
+1,Show total sales revenue for all regions,0,0,0,0
+2,Show revenue by region,0,0,0,0
+3,Show top 5 products by quantity sold,0,0,0,0
+4,List transactions in Baghdad,0,0,0,0
+5,Find all product returns,0,0,0,0
+6,Show top warehouse performance by sales,0,0,0,0
+7,Show total quantity sold for Clafoneer 500mg Vial,0,0,0,0
+8,Show average selling price,0,0,0,0
+9,Show all sales transactions exceeding 100 units,0,0,0,0
+10,Total transactions in Mosul warehouse North,0,0,0,0

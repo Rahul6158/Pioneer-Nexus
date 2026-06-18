@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+psycopg2-binary
+sqlalchemy
+scikit-learn==1.6.1
+joblib
+google-genai
+pandas
+numpy
+python-dotenv
+prophet
+slowapi
+cachetools
+pydantic

@@ -1,0 +1,2 @@
+model_name,mape_percent,rmse_iqd,mae_iqd,samples_evaluated,status
+Sales Forecast Prophet Model,1144.5228,9253907.69,9153644.1,118,PASSED

@@ -1,0 +1,6 @@
+category,total_queries,successful_executions,success_rate
+grouping,2,0,0.0
+filtering_aggregation,2,0,0.0
+filtering,3,0,0.0
+ranking,1,0,0.0
+aggregation,2,0,0.0
