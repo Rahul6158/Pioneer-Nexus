@@ -1,15 +1,18 @@
 import pandas as pd
 
+
 def create_features(df: pd.DataFrame) -> pd.DataFrame:
     df["order_date"] = pd.to_datetime(df["order_date"])
-    
+
     # Expiry date may be null or different column name, handle gracefully
     if "expiry_date" in df.columns:
-        df["expiry_date"] = pd.to_datetime(df["expiry_date"], errors='coerce')
-        df["days_to_expiry"] = (df["expiry_date"] - df["order_date"]).dt.days.fillna(90) # Handle conversion failures/missing dates
+        df["expiry_date"] = pd.to_datetime(df["expiry_date"], errors="coerce")
+        df["days_to_expiry"] = (df["expiry_date"] - df["order_date"]).dt.days.fillna(
+            90
+        )  # Handle conversion failures/missing dates
     else:
-        df["days_to_expiry"] = 90 # fallback
-        
+        df["days_to_expiry"] = 90  # fallback
+
     # Time features
     df["year"] = df["order_date"].dt.year
     df["month"] = df["order_date"].dt.month

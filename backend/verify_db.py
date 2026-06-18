@@ -14,10 +14,12 @@ print("=== DB Verification ===")
 try:
     with engine.connect() as conn:
         print("[OK] Connected to database successfully.")
-        
+
         # Check tables depending on engine
         if engine.name == "sqlite":
-            result = conn.execute(text("SELECT name FROM sqlite_master WHERE type='table'"))
+            result = conn.execute(
+                text("SELECT name FROM sqlite_master WHERE type='table'")
+            )
             tables = [row[0] for row in result]
             print(f"[INFO] Tables in SQLite database: {tables}")
         else:
@@ -27,11 +29,13 @@ try:
             """))
             tables = [row[0] for row in result]
             print(f"[INFO] Tables in schema 'liveapp': {tables}")
-            
-        target_table = 'chat_session_history'
+
+        target_table = "chat_session_history"
         if target_table in tables:
             print(f"[OK] Table '{target_table}' EXISTS.")
-            query_table = f"liveapp.{target_table}" if engine.name != "sqlite" else target_table
+            query_table = (
+                f"liveapp.{target_table}" if engine.name != "sqlite" else target_table
+            )
             df = pd.read_sql(text(f"SELECT * FROM {query_table} LIMIT 5"), conn)
             print(f"[INFO] Table has {len(df)} rows (showing up to 5):")
             if not df.empty:
@@ -63,6 +67,6 @@ try:
                 """))
             conn.commit()
             print("[OK] Table created successfully!")
-            
+
 except Exception as e:
     print(f"[ERROR] {e}")

@@ -24,7 +24,7 @@ def generate_sql(query: str):
         ORDER BY total_quantity DESC
         LIMIT 5
         """
-        
+
     if "total revenue" in query.lower():
         return """
         SELECT SUM(revenue_iqd) as overall_revenue

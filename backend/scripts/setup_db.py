@@ -9,17 +9,20 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from core.database import get_engine
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
+
 
 def setup_database():
     logger.info("Initializing database setup...")
-    
+
     # Resolve active engine first to trigger fallback check
     active_engine = get_engine()
     is_sqlite_db = active_engine.name == "sqlite"
     schema_prefix = "" if is_sqlite_db else "liveapp."
-    
+
     if not is_sqlite_db:
         try:
             with active_engine.begin() as conn:
@@ -44,7 +47,7 @@ def setup_database():
         interaction_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """
-    
+
     sql_sales_table = f"""
     CREATE TABLE IF NOT EXISTS {schema_prefix}pharmasales (
         order_id VARCHAR(50) PRIMARY KEY,
@@ -64,7 +67,9 @@ def setup_database():
     try:
         with active_engine.begin() as conn:
             conn.execute(text(sql_chat_table))
-            logger.info(f"Table '{schema_prefix}chat_session_history' created/verified.")
+            logger.info(
+                f"Table '{schema_prefix}chat_session_history' created/verified."
+            )
             conn.execute(text(sql_sales_table))
             logger.info(f"Table '{schema_prefix}pharmasales' created/verified.")
     except Exception as e:
@@ -75,24 +80,40 @@ def setup_database():
         try:
             with active_engine.connect() as conn:
                 res = conn.execute(text("SELECT COUNT(*) FROM pharmasales")).scalar()
-                
+
             if res == 0:
                 logger.info("Seeding SQLite database with sample transactions...")
-                base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-                csv_path = os.path.join(base_dir, "data", "sales_transactions_sample.csv")
-                
+                base_dir = os.path.dirname(
+                    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                )
+                csv_path = os.path.join(
+                    base_dir, "data", "sales_transactions_sample.csv"
+                )
+
                 if os.path.exists(csv_path):
                     df = pd.read_csv(csv_path)
-                    df['order_date'] = pd.to_datetime(df['order_date'])
-                    df['expiry_date'] = pd.to_datetime(df['expiry_date'])
-                    df.to_sql('pharmasales', con=active_engine, if_exists='append', index=False)
-                    logger.info(f"Successfully seeded database with {len(df)} transactions from {csv_path}.")
+                    df["order_date"] = pd.to_datetime(df["order_date"])
+                    df["expiry_date"] = pd.to_datetime(df["expiry_date"])
+                    df.to_sql(
+                        "pharmasales",
+                        con=active_engine,
+                        if_exists="append",
+                        index=False,
+                    )
+                    logger.info(
+                        f"Successfully seeded database with {len(df)} transactions from {csv_path}."
+                    )
                 else:
-                    logger.warning(f"Seeding failed: Sample data CSV not found at '{csv_path}'.")
+                    logger.warning(
+                        f"Seeding failed: Sample data CSV not found at '{csv_path}'."
+                    )
             else:
-                logger.info(f"Database already contains {res} records. Seeding skipped.")
+                logger.info(
+                    f"Database already contains {res} records. Seeding skipped."
+                )
         except Exception as e:
             logger.error(f"Error during database seeding: {e}")
+
 
 if __name__ == "__main__":
     setup_database()

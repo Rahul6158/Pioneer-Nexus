@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class ExpiryRiskService:
     """
     Standardized Service for Pharmaceutical Expiry Risk Detection.
@@ -43,18 +44,18 @@ class ExpiryRiskService:
             raise ValueError(f"Missing required columns: {missing}")
 
         # Ensure datetime format
-        df['expiry_date'] = pd.to_datetime(df['expiry_date'])
-        
+        df["expiry_date"] = pd.to_datetime(df["expiry_date"])
+
         # Calculate derived metrics with normalized time
         today = pd.Timestamp.today().normalize()
-        df['days_to_expiry'] = (df['expiry_date'] - today).dt.days
-        df['risk_level'] = df['days_to_expiry'].apply(cls.calculate_risk_level)
-        df['potential_value_loss'] = df['quantity'] * df['unit_price_iqd']
-        
+        df["days_to_expiry"] = (df["expiry_date"] - today).dt.days
+        df["risk_level"] = df["days_to_expiry"].apply(cls.calculate_risk_level)
+        df["potential_value_loss"] = df["quantity"] * df["unit_price_iqd"]
+
         # Rename for frontend consistency
-        if 'product_name' in df.columns:
-            df = df.rename(columns={'product_name': 'product'})
-        if 'batch_id' in df.columns:
-            df = df.rename(columns={'batch_id': 'batch'})
+        if "product_name" in df.columns:
+            df = df.rename(columns={"product_name": "product"})
+        if "batch_id" in df.columns:
+            df = df.rename(columns={"batch_id": "batch"})
 
         return df
