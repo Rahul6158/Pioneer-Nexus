@@ -3,6 +3,7 @@ import hashlib
 import json
 import logging
 import random
+import re
 import threading
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
@@ -39,7 +40,7 @@ configure_logging()
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-from services.expiry_demand_match_service import ExpiryDemandMatchService
+from services.expiry_demand_match_service import ExpiryDemandMatchService  # noqa: E402
 
 # Memory caching for KPIs (5 minute TTL)
 kpi_cache = TTLCache(maxsize=10, ttl=300)
@@ -127,8 +128,6 @@ class PredictiveSummaryRequest(BaseModel):
 
 # SQL Security
 ALLOWED_TABLES = ["pharmasales", "inventory", "products", "warehouses"]
-
-import re
 
 
 def validate_sql_safe(sql: str) -> bool:
@@ -249,7 +248,7 @@ async def lifespan(app: FastAPI):
                             f"ALTER TABLE liveapp.chat_session_history ADD COLUMN IF NOT EXISTS {col} {col_type}"
                         )
                     )
-                except:
+                except Exception:
                     pass
 
             logger.info(
@@ -401,12 +400,12 @@ async def copilot_chat(req: CopilotRequest, request: Request):
                 "response": "Hello! I am Konfig Nexus AI, your pharmaceutical analyst. I'm connected to your live data. How can I assist you with your analytics today?"
             }
 
-        schema_info = """
+        _schema_info = """
 Table: liveapp.pharmasales (order_id, order_date, product_name, region, warehouse, transaction_type, quantity, unit_price_iqd, revenue_iqd, expiry_date)
 Calculations: Net Revenue=sum(revenue_iqd), Sales Volume=sum(quantity) where Sale, Return Rate=Returns/Sales.
 """
 
-        product_list = [
+        _product_list = [
             "CLAFONEER 500mg IV/IM Vial",
             "No-vomit 8mg/4ml Injection",
             "ATRANEER 10mg/ml Injection",
@@ -614,7 +613,7 @@ def get_base_dashboard_data(month: Optional[int] = None):
 
 
 def get_dashboard_summary_data(request: Request, month: Optional[int] = None):
-    start_all = time.time()
+    _start_all = time.time()
     df = get_base_dashboard_data(month)
 
     if df.empty:
@@ -792,7 +791,7 @@ app.add_middleware(
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # Database Connection imported from core.database
-from core.database import engine, fetch_data
+from core.database import engine, fetch_data  # noqa: E402
 
 
 def convert_to_native(obj):
@@ -1424,7 +1423,7 @@ def predict_demand(req: DemandPredictionRequest):
         if le_product is None or le_region is None:
             raise ValueError("Label encoders not initialized")
 
-        day_of_week = datetime.now().weekday()
+        _day_of_week = datetime.now().weekday()
 
         # Handle unseen labels
         try:
@@ -2008,7 +2007,7 @@ def get_all_predictions():
                                 "month": int(month),
                             }
                         )
-                    except:
+                    except Exception:
                         pass
 
                 if batch_data:
@@ -2072,9 +2071,9 @@ def get_expiry_demand_match():
 
 # ==================== PRESCRIPTIVE & COPILOT LAYER ====================
 
-from recommendations import generate_recommendations
-from copilot.copilot_service import run_copilot
-from features import create_features
+from recommendations import generate_recommendations  # noqa: E402
+from copilot.copilot_service import run_copilot  # noqa: E402
+from features import create_features  # noqa: E402
 
 
 class CopilotQueryRequest(BaseModel):

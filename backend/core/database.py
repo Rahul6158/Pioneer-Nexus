@@ -3,10 +3,9 @@ import logging
 import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.pool import QueuePool
+from core.config import config
 
 logger = logging.getLogger(__name__)
-
-from core.config import config
 
 DATABASE_URL = config.DATABASE_URL
 ALLOWED_TABLES = config.ALLOWED_TABLES
